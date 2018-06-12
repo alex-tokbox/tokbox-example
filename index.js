@@ -1,6 +1,6 @@
 // Dependencies
 var express = require('express'),
-    OpenTok = require('../../lib/opentok');
+    OpenTok = require('opentok');
 
 // Verify that the API Key and API Secret are defined
 var apiKey = process.env.API_KEY,
