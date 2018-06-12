@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>OpenTok Hello World</title>
     <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript">
         var apiKey = '<%= apiKey %>';
         var sessionId = '<%= sessionId %>';
@@ -18,6 +19,10 @@
         <div id="publisher"></div>
         <div id="subscribers"></div>
     </div>
+
+    <button class="btn start">Start archiving</button>
+    <button class="btn stop">Stop archiving</button>
+
     <div id="textchat">
          <p id="history"></p>
          <form>

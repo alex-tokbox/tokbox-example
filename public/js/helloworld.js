@@ -1,11 +1,13 @@
 
-/* --------------- Basic Vide Chat --------------- */
+/* --------------- Basic Video Chat --------------- */
 
 // Initialize an OpenTok Session object
 var session = OT.initSession(apiKey, sessionId);
 
 // Initialize a Publisher, and place it into the element with id="publisher"
 var publisher = OT.initPublisher('publisher');
+
+OT.setLogLevel(OT.DEBUG);
 
 // Attach event handlers
 session.on({
@@ -63,6 +65,31 @@ form.addEventListener('submit', function submit(event) {
       msgTxt.value = '';
     }
   });
+});
+
+/* --------------- Archiving --------------- */
+
+session.on('archiveStarted', function(event) {
+  archiveID = event.id;
+  console.log("ARCHIVE STARTED");
+  $(".start").hide();
+  $(".stop").show();
+});
+
+session.on('archiveStopped', function(event) {
+  archiveID = null;
+  console.log("ARCHIVE STOPPED");
+  $(".start").show();
+  $(".stop").hide();
+});
+
+$(document).ready(function() {
+  $(".start").click(function (event) {
+    $.post("/start");
+  }).show();
+  $(".stop").click(function(event){
+    $.get("stop/" + archiveID);
+  }).hide();
 });
 
 
