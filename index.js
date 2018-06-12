@@ -68,7 +68,8 @@ app.get('/stop/:archiveId', function(req, res) {
 
 // Start the express app
 function init() {
-  app.listen(3000, function() {
+  const port = process.env.PORT || 3000;
+  app.listen(port, function() {
     console.log('You\'re app is now ready at http://localhost:3000/');
   });
 }
