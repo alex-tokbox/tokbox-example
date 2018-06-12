@@ -40,16 +40,12 @@ app.get('/', function(req, res) {
 
 // Archiving
 app.post('/start', function(req, res) {
-  var hasAudio = (req.param('hasAudio') !== undefined);
-  var hasVideo = (req.param('hasVideo') !== undefined);
-  var outputMode = req.param('outputMode');
   
   opentok.startArchive(app.get('sessionId'), {
     name: 'Node Archiving Sample App',
-    hasAudio: hasAudio,
-    hasVideo: hasVideo,
-    outputMode: outputMode
+
   }, function(err, archive) {
+
     if (err) return res.send(500,
       console.log('Could not start archive for session '+app.get('sessionId')+'. error='+err.message)
     );
