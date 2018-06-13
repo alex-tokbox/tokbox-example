@@ -38,7 +38,8 @@ app.get('/', function(req, res) {
 });
 
 
-// Archiving
+/*--------------- Archiving ---------------*/
+
 app.post('/start', function(req, res) {
   
   opentok.startArchive(app.get('sessionId'), {
@@ -61,6 +62,40 @@ app.get('/stop/:archiveId', function(req, res) {
     res.json(archive);
   });
 });
+
+/*--------------- Historical Archives ---------------*/
+app.get('/history', function(req, res) {
+  var page = req.param('page') || 1,
+      offset = (page - 1) * 5;
+  opentok.listArchives({ offset: offset, count: 5 }, function(err, archives, count) {
+    if (err) return res.send(500, 'Could not list archives. error=' + err.message);
+    res.render('history.ejs', {
+      archives: archives,
+      showPrevious: page > 1 ? ('/history?page='+(page-1)) : null,
+      showNext: (count > offset + 5) ? ('/history?page='+(page+1)) : null
+    });
+  });
+});
+
+//Delete an archive
+app.get('/delete/:archiveId', function(req, res) {
+  var archiveId = req.param('archiveId');
+  opentok.deleteArchive(archiveId, function(err) {
+    if (err) return res.send(500, 'Could not stop archive '+archiveId+'. error='+err.message);
+    res.redirect('/history');
+  });
+});
+
+//Downloads an archive to view
+app.get('/download/:archiveId', function(req, res) {
+  var archiveId = req.param('archiveId');
+  opentok.getArchive(archiveId, function(err, archive) {
+    if (err) return res.send(500, 'Could not get archive '+archiveId+'. error='+err.message);
+    res.redirect(archive.url);
+  });
+});
+
+/*--------------------------------------------------*/
 
 // Start the express app
 function init() {
