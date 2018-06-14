@@ -94,8 +94,10 @@ $(document).ready(function() {
 
 /* --------------- Screen Sharing --------------- */
 
-var screenShare = document.querySelector(".shareScreen");
-OT.registerScreenSharingExtension('chrome', 'dcpgfodbnibankobonmfdpofmnfoogch', 1.4);
+var screenShare = document.querySelector(".shareScreen"); 
+
+//Extension registration
+// OT.registerScreenSharingExtension('chrome', 'dcpgfodbnibankobonmfdpofmnfoogch', 1.4);
 
 screenShare.addEventListener('click', function submit(event) {
 
@@ -108,9 +110,13 @@ screenShare.addEventListener('click', function submit(event) {
       console.log("response supported: " + response.supported);
       console.log("extension registered: " + response.extensionRegistered);
       console.log("does not support");
-    } else if (response.extensionInstalled === false) {
-      // Prompt to install the extension.
-      console.log("install extension");
+
+    //For chrome
+    // } else if (response.extensionInstalled === false) {
+    //   // Prompt to install the extension.
+    //   console.log("install extension");
+    //   console.log("Extension Installed: " + response.extensionInstalled);
+    //   console.log("extension registered: " + response.extensionRegistered);
     } else {
       // Screen sharing is available. Publish the screen.
       console.log("good to go");
