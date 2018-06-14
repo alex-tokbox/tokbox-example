@@ -92,4 +92,42 @@ $(document).ready(function() {
   }).hide();
 });
 
+/* --------------- Screen Sharing --------------- */
 
+var screenShare = document.querySelector(".shareScreen");
+OT.registerScreenSharingExtension('chrome', 'dcpgfodbnibankobonmfdpofmnfoogch', 1.4);
+
+screenShare.addEventListener('click', function submit(event) {
+
+  console.log("click success");
+  OT.checkScreenSharingCapability(function(response) {
+    console.log("OT.checkscreensharingcapability function");
+    if(!response.supported || response.extensionRegistered === false) {
+      // This browser does not support screen sharing.
+      console.log("response: " + response);
+      console.log("response supported: " + response.supported);
+      console.log("extension registered: " + response.extensionRegistered);
+      console.log("does not support");
+    } else if (response.extensionInstalled === false) {
+      // Prompt to install the extension.
+      console.log("install extension");
+    } else {
+      // Screen sharing is available. Publish the screen.
+      console.log("good to go");
+      var screenPublisher = OT.initPublisher('screen-preview',
+        {videoSource: 'screen'},
+        function(error) {
+          if (error) {
+            // Look at error.message to see what went wrong.
+          } else {
+            session.publish(screenPublisher, function(error) {
+              if (error) {
+                // Look error.message to see what went wrong.
+              }
+            });
+          }
+        }
+      );
+    }
+  });
+});
