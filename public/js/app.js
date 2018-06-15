@@ -16,6 +16,7 @@ session.on({
   sessionConnected: function(event) {
     // Publish the publisher we initialzed earlier (this will trigger 'streamCreated' on other
     // clients)
+
     session.publish(publisher);
   },
 
@@ -24,11 +25,14 @@ session.on({
     // Create a container for a new Subscriber, assign it an id using the streamId, put it inside
     // the element with id="subscribers"
     var subContainer = document.createElement('div');
+    var options = {fitMode: 'contain', width: '100%', height: '100%'};
+
     subContainer.id = 'stream-' + event.stream.streamId;
+    subContainer.className = "subscriber";
     document.getElementById('subscribers').appendChild(subContainer);
 
     // Subscribe to the stream that caused this event, put it inside the container we just made
-    session.subscribe(event.stream, subContainer);
+    session.subscribe(event.stream, subContainer, options);
   }
 
 });

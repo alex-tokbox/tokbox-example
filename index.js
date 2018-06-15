@@ -43,7 +43,7 @@ app.get('/', function(req, res) {
 app.post('/start', function(req, res) {
   
   opentok.startArchive(app.get('sessionId'), {
-    name: 'Node Archiving Sample App',
+    name: 'Archive',
 
   }, function(err, archive) {
 
