@@ -11,22 +11,53 @@ body, html {
     right:0;
 }
 
-.subscriber {
-    height: 100%;
-    width: 100%;
-}
 
 #subscribers {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
+#subscribers-screenshare {
+    height: 100%;
+    width: 20%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#screen-preview {
+}
+
+#videos {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+/*.flex-container-screenshare {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: left;
+    align-items: left;
+    align-content: left;
+}*/
+
+
+
+/*.subscriber{
+    width: 100%;
+    height: 100%;
+}*/
 
 #publisher {
     position: fixed;
     left: 0;
     bottom: 0;
-    border-radius: 10px;
+    z-index: 10;
+    width: 264px !important;
+    height: 198px !important;
 }
 
 #history {
@@ -62,20 +93,20 @@ input#msgTxt {
     height: 100%;
 }
 
-.flex-container{
+/*.flex-container{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     align-content: center;
-}
+}*/
 
-#videos {
+/*#videos {
     position: relative;
     height: 100%;
     width: 100%;
     border-style: solid;
-}
+}*/
 
 .main {
     padding: 0;

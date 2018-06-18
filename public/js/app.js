@@ -5,9 +5,12 @@
 var session = OT.initSession(apiKey, sessionId);
 
 // Initialize a Publisher, and place it into the element with id="publisher"
-var publisher = OT.initPublisher('publisher');
+var publisher = OT.initPublisher('publisher', {fitMode: 'contain', width: '100%', height: '100%'});
 
 OT.setLogLevel(OT.DEBUG);
+
+var videoStreams = 1;
+var screenShared = false;
 
 // Attach event handlers
 session.on({
@@ -18,6 +21,7 @@ session.on({
     // clients)
 
     session.publish(publisher);
+
   },
 
   // This function runs when another client publishes a stream (eg. session.publish())
@@ -29,10 +33,26 @@ session.on({
 
     subContainer.id = 'stream-' + event.stream.streamId;
     subContainer.className = "subscriber";
+
     document.getElementById('subscribers').appendChild(subContainer);
+
+    //keeps track of number of streams.
+    videoStreams++;
+
+    if(event.stream.videoType === "screen"){
+      screenShared = true;
+    }
 
     // Subscribe to the stream that caused this event, put it inside the container we just made
     session.subscribe(event.stream, subContainer, options);
+  },
+
+  streamDestroyed: function(event) {
+    videoStreams--;
+
+    if(event.stream.videoType === "screen"){
+      screenShared = false;
+    }
   }
 
 });
@@ -105,15 +125,14 @@ var screenShare = document.querySelector(".shareScreen");
 
 screenShare.addEventListener('click', function submit(event) {
 
-  console.log("click success");
+  //Adds custom classes to change layout of page
+  $("#subscribers").attr('id', 'subscribers-screenshare');
+  $("#publisher").removeAttr('id');
+
+
   OT.checkScreenSharingCapability(function(response) {
-    console.log("OT.checkscreensharingcapability function");
     if(!response.supported || response.extensionRegistered === false) {
       // This browser does not support screen sharing.
-      console.log("response: " + response);
-      console.log("response supported: " + response.supported);
-      console.log("extension registered: " + response.extensionRegistered);
-      console.log("does not support");
 
     //For chrome
     // } else if (response.extensionInstalled === false) {
@@ -125,7 +144,7 @@ screenShare.addEventListener('click', function submit(event) {
       // Screen sharing is available. Publish the screen.
       console.log("good to go");
       var screenPublisher = OT.initPublisher('screen-preview',
-        {videoSource: 'screen'},
+        {videoSource: 'screen', fitMode: 'contain', width: '100%', height: '100%'},
         function(error) {
           if (error) {
             // Look at error.message to see what went wrong.
@@ -141,3 +160,9 @@ screenShare.addEventListener('click', function submit(event) {
     }
   });
 });
+
+
+//To maintain aspect ratio
+// $( window ).resize(function() {
+//   $(".subscriber").height($( ".subscriber" ).width() * 0.75);
+// });
