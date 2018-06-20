@@ -112,7 +112,7 @@ $(document).ready(function() {
     $.post("/start");
   }).show();
   $(".stop").click(function(event){
-    $.get("stop/" + archiveID);
+    $.get("/stop/" + archiveID);
   }).hide();
 });
 

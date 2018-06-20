@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>OpenTok Sample App</title>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        var apiKey = '<%= apiKey %>';
+        var sessionId = '<%= sessionId %>';
+        var token = '<%= token %>';
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="/css/app.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    <div class="container-fluid" id="page">
+        <div class="row">
+            <div class="col-md-10 main">
+
+                <div id="videos">
+                    <div id="subscribers">
+                        <div id="publisher"></div>
+                    </div>
+
+                    <div id="screen-preview"></div>
+                </div>
+
+                <div id="menu">
+                    <button class="shareScreen btn btn-primary">Share Screen</button>
+                    <button class="start btn btn-primary">Start archiving</button>
+                    <button class="stop btn btn-primary">Stop archiving</button>
+                    <a href="history" class="btn btn-primary">Past Archives</a>
+                </div>
+            </div>
+
+            <div id="textchat" class="col-md-2">
+                <p id="history"></p>
+                <form> <input type="text" placeholder="Input your text here" id="msgTxt"></input> </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+
+</body>
+</html>

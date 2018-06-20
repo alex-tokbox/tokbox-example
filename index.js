@@ -17,25 +17,45 @@ app.use(express.static(__dirname + '/public'));
 // Initialize OpenTok
 var opentok = new OpenTok(apiKey, apiSecret);
 
-// Create a session and store it in the express app
-opentok.createSession({mediaMode:"routed"}, function(err, session) {
-  if (err) throw err;
-  app.set('sessionId', session.sessionId);
-  // We will wait on starting the app until this is done
-  init();
-});
+init();
+
 
 app.get('/', function(req, res) {
-  var sessionId = app.get('sessionId'),
-      // generate a fresh token for this client
-      token = opentok.generateToken(sessionId);
+  res.render('index.ejs');
+});
 
-  res.render('index.ejs', {
+
+/* --------------- Study Group --------------- */
+
+app.get('/studygroup/:groupname', function(req, res) {
+  var groupName = req.param('groupname');
+
+  //If the session under that group name doesn't exist
+  if (!app.get(groupName)){
+    // Create a session and store it in the express app
+    opentok.createSession({mediaMode:"routed"}, function(err, session) {
+      if (err) throw err;
+      app.set(groupName, session.sessionId);
+      getToken(groupName, res);
+    });
+
+  } else {
+    getToken(groupName, res);
+  }
+});
+
+function getToken(groupName, res) {
+  var sessionId = app.get(groupName);
+
+  // generate a fresh token for this client
+  var token = opentok.generateToken(sessionId);
+
+  res.render('studygroup.ejs', {
     apiKey: apiKey,
     sessionId: sessionId,
     token: token
   });
-});
+}
 
 
 /*--------------- Archiving ---------------*/
