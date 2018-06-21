@@ -135,11 +135,11 @@ screenShare.addEventListener('click', function submit(event) {
       // This browser does not support screen sharing.
 
     //For chrome
-    } else if (response.extensionInstalled === false) {
-      // Prompt to install the extension.
-      console.log("install extension");
-      console.log("Extension Installed: " + response.extensionInstalled);
-      console.log("extension registered: " + response.extensionRegistered);
+    // } else if (response.extensionInstalled === false) {
+    //   // Prompt to install the extension.
+    //   console.log("install extension");
+    //   console.log("Extension Installed: " + response.extensionInstalled);
+    //   console.log("extension registered: " + response.extensionRegistered);
     } else {
       // Screen sharing is available. Publish the screen.
       console.log("good to go");
