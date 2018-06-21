@@ -109,7 +109,7 @@ session.on('archiveStopped', function(event) {
 
 $(document).ready(function() {
   $(".start").click(function (event) {
-    $.post("/start");
+    $.post("/start/" + session.sessionId);
   }).show();
   $(".stop").click(function(event){
     $.get("/stop/" + archiveID);

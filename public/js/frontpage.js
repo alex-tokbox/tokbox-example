@@ -1,11 +1,9 @@
-var studygroup = document.getElementById('studygroup');
-var message = document.getElementById('messagetxt');
+var studyGroup = document.getElementById('studygroup');
+var groupName = document.getElementById('groupname');
 
 // Send a signal once the user enters data in the form
-studygroup.addEventListener('submit', function submit(event) {
+studyGroup.addEventListener('submit', function submit(event) {
   event.preventDefault();
   //redirects user to their specific session.
-  window.location.replace(window.location.href + "studygroup/" + message.value);
+  window.location.replace(window.location.href + "studygroup/" + groupName.value);
 });
-
-console.log("2 " + studygroup);

@@ -60,9 +60,12 @@ function getToken(groupName, res) {
 
 /*--------------- Archiving ---------------*/
 
-app.post('/start', function(req, res) {
-  
-  opentok.startArchive(app.get('sessionId'), {
+app.post('/start/:sessionid', function(req, res) {
+
+  console.log('started');
+  var sessionId = req.param('sessionid');
+
+  opentok.startArchive(sessionId, {
     name: 'Archive',
 
   }, function(err, archive) {
@@ -70,7 +73,7 @@ app.post('/start', function(req, res) {
     if (err) return res.send(500,
       console.log('Could not start archive for session '+app.get('sessionId')+'. error='+err.message)
     );
-      console.log("err= "+err);
+
     res.json(archive);
   });
 });
@@ -115,7 +118,46 @@ app.get('/download/:archiveId', function(req, res) {
   });
 });
 
-/*--------------------------------------------------*/
+/*----------------- Lecture -------------------*/
+
+
+app.get('/lecture/:lecturename', function(req, res) {
+  var lectureName = req.param('lecturename');
+
+  //If the session under that lecture name doesn't exist
+  if (!app.get(lectureName)){
+    // Create a session and store it in the express app
+    opentok.createSession({mediaMode:"routed"}, function(err, session) {
+      if (err) throw err;
+      app.set(lectureName, session.sessionId);
+      // generate a moderator token for the teacher
+
+      var tokenOptions = {};
+      tokenOptions.role = "moderator";
+      tokenOptions.data = "username=bob";
+      var token = opentok.generateToken(session.sessionId, tokenOptions);
+      console.log("teacher token: " + token);
+
+      res.render('lecture-teacher.ejs', {
+        apiKey: apiKey,
+        sessionId: session.sessionId,
+        token: token
+      });
+    });
+
+  } else {
+    var session = app.get(lectureName);
+    var token = opentok.generateToken(session);
+    console.log("student token: " + token);
+
+    res.render('lecture-student.ejs', {
+      apiKey: apiKey,
+      sessionId: session,
+      token: token
+    });
+  }
+});
+
 
 // Start the express app
 function init() {
