@@ -1,6 +1,9 @@
 // Dependencies
 var express = require('express'),
     OpenTok = require('opentok');
+    request = require('request');
+    jwt = require('jsonwebtoken');
+    bodyParser = require('body-parser');
 
 // Verify that the API Key and API Secret are defined
 var apiKey = process.env.API_KEY,
@@ -13,6 +16,7 @@ if (!apiKey || !apiSecret) {
 // Initialize the express app
 var app = express();
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());
 
 // Initialize OpenTok
 var opentok = new OpenTok(apiKey, apiSecret);
@@ -36,20 +40,27 @@ app.get('/studygroup/:groupname', function(req, res) {
     opentok.createSession({mediaMode:"routed"}, function(err, session) {
       if (err) throw err;
       app.set(groupName, session.sessionId);
-      getToken(groupName, res);
+      getToken(groupName, res, "pip");
     });
+    session = groupName;
 
   } else {
     getToken(groupName, res);
   }
 });
 
-function getToken(groupName, res) {
+// generate a fresh token for this client
+function getToken(groupName, res, layout) {
   var sessionId = app.get(groupName);
 
-  // generate a fresh token for this client
-  var token = opentok.generateToken(sessionId);
-
+  if(layout === "pip"){
+    var token = opentok.generateToken(sessionId, {
+      initialLayoutClassList: ['full']
+    });
+  } else {
+    var token = opentok.generateToken(sessionId);
+  }
+  
   res.render('studygroup.ejs', {
     apiKey: apiKey,
     sessionId: sessionId,
@@ -61,21 +72,8 @@ function getToken(groupName, res) {
 /*--------------- Archiving ---------------*/
 
 app.post('/start/:sessionid', function(req, res) {
-
-  console.log('started');
   var sessionId = req.param('sessionid');
-
-  opentok.startArchive(sessionId, {
-    name: 'Archive',
-
-  }, function(err, archive) {
-
-    if (err) return res.send(500,
-      console.log('Could not start archive for session '+app.get('sessionId')+'. error='+err.message)
-    );
-
-    res.json(archive);
-  });
+  archiveFormat(sessionId);
 });
 
 app.get('/stop/:archiveId', function(req, res) {
@@ -117,6 +115,42 @@ app.get('/download/:archiveId', function(req, res) {
     res.redirect(archive.url);
   });
 });
+
+/*----------------- Archive composition -------------*/
+function archiveFormat(sessionId){
+
+ 
+  const headers = () => {
+    const createToken = () => {
+      const options = {
+        issuer: apiKey,
+        expiresIn: '1m',
+      };
+      return jwt.sign({ ist: 'project' }, apiSecret, options);
+    };
+
+    return { 
+      'X-OPENTOK-AUTH': createToken(),
+      'Content-Type': 'application/json'
+    };
+  };
+  request.post({
+    headers: headers(),
+    url: 'https://api.opentok.com/v2/project/' + apiKey + '/archive',
+    json: {
+        "sessionId": sessionId,
+        "layout": {
+          "type": "pip"
+        },
+        "name" : "Archive",
+        "outputMode" : "composed",
+      }
+  },function(error, response, body) {
+      if (error) {
+        console.log('error', error);
+      }
+    });
+}
 
 /*----------------- Lecture -------------------*/
 
