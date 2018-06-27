@@ -1,0 +1,66 @@
+body, html {
+    background-color: gray;
+    height: 100%;
+}
+
+#textchat {
+    height: 100%;
+    background-color: #333;
+    position: fixed;
+    float: right;
+    right:0;
+}
+
+#videos {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+#publisher {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+    width: 264px !important;
+    height: 198px !important;
+}
+
+#history {
+     width: 100%;
+     height: calc(100% - 40px);
+     overflow: auto;
+}
+
+input#msgTxt {
+            height: 40px;
+            position: relative;
+            bottom: 20px;
+            width: 100%;
+}
+#history .mine {
+    color: #00FF00;
+    text-align: right;
+    margin-right: 10px;
+}
+#history .theirs {
+    color: #00FFFF;
+    margin-left: 10px;
+}
+
+#menu {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#page {
+    text-align: center;
+    height: 100%;
+}
+
+.main {
+    padding: 0;
+    height: 100%;
+}

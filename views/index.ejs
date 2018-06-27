@@ -19,8 +19,25 @@
 	</div>
 	<div>
 		<h1> Lecture </h1>
-		<a class="btn btn-primary"> Create a lecture </a>
-		<a class="btn btn-primary"> Join a lecture </a>
+		
+		<form id="lecture-create">
+			<h4> Create a lecture </h4>
+			<input type="text" id="lecturename-teacher"></input>
+			<input type="submit" class="btn btn-primary"></input>
+		</form>
+		
+		<form id="lecture-join">
+			<h4> Join a lecture </h4>
+			<input type="text" id="lecturename-student"></input>
+			<input type="submit" class="btn btn-primary"> </input>
+		</form>
+		
+		<form id="lecture-observe">
+			<h4> Observe a lecture </h4>
+			<input type="text" id="lecturename-lurker"></input>
+			<input type="submit" class="btn btn-primary"> </input>
+		</form>
+		
 	</div>
 	<script src="/js/frontpage.js"></script>
 </body>

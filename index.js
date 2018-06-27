@@ -52,7 +52,7 @@ app.get('/studygroup/:groupname', function(req, res) {
 // generate a fresh token for this client
 function getToken(groupName, res, layout) {
   var sessionId = app.get(groupName);
-
+  //Changes the default layoutclass to customize the archive format
   if(layout === "pip"){
     var token = opentok.generateToken(sessionId, {
       initialLayoutClassList: ['full']
@@ -155,10 +155,31 @@ function archiveFormat(sessionId){
 /*----------------- Lecture -------------------*/
 
 
-app.get('/lecture/:lecturename', function(req, res) {
+app.get('/lecture/:lecturename/:role', function(req, res) {
   var lectureName = req.param('lecturename');
+  var role = req.param('role');
+  console.log('lecture name: ' + lectureName);
+  console.log('role:' + role);
 
-  //If the session under that lecture name doesn't exist
+  if (role === "teacher"){
+    console.log("role = teacher");
+    teacherJoins(lectureName, req, res);
+  } else if (role === "student") {
+    console.log("role = student");
+    studentJoins(lectureName, req, res);
+
+  } else if (role === "lurker") {
+    console.log("role = lurker");
+
+  } else {
+    console.log("role error");
+  }
+});
+
+
+
+function teacherJoins(lectureName, req, res){
+   //Teacher (first person to join lecture)
   if (!app.get(lectureName)){
     // Create a session and store it in the express app
     opentok.createSession({mediaMode:"routed"}, function(err, session) {
@@ -168,9 +189,8 @@ app.get('/lecture/:lecturename', function(req, res) {
 
       var tokenOptions = {};
       tokenOptions.role = "moderator";
-      tokenOptions.data = "username=bob";
+      tokenOptions.data = "role=teacher";
       var token = opentok.generateToken(session.sessionId, tokenOptions);
-      console.log("teacher token: " + token);
 
       res.render('lecture-teacher.ejs', {
         apiKey: apiKey,
@@ -178,11 +198,19 @@ app.get('/lecture/:lecturename', function(req, res) {
         token: token
       });
     });
+  } else {
+    console.log("Sorry, lecture already exists");
+  }
+}
 
+function studentJoins(lectureName, req, res) {
+  
+  if (!app.get(lectureName)){
+    console.log("Sorry, lecture does not exist");
   } else {
     var session = app.get(lectureName);
+    // generate a publisher token
     var token = opentok.generateToken(session);
-    console.log("student token: " + token);
 
     res.render('lecture-student.ejs', {
       apiKey: apiKey,
@@ -190,7 +218,7 @@ app.get('/lecture/:lecturename', function(req, res) {
       token: token
     });
   }
-});
+}
 
 
 // Start the express app

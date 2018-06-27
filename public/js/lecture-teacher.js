@@ -5,12 +5,9 @@
 var session = OT.initSession(apiKey, sessionId);
 
 // Initialize a Publisher, and place it into the element with id="publisher"
-//var publisher = OT.initPublisher('publisher', {fitMode: 'contain', width: '100%', height: '100%'});
+var publisher = OT.initPublisher('publisher', {fitMode: 'contain', width: '100%', height: '100%', name:'teacher'});
 
 OT.setLogLevel(OT.DEBUG);
-
-var videoStreams = 1;
-var screenShared = false;
 
 // Attach event handlers
 session.on({
@@ -20,7 +17,6 @@ session.on({
     // Publish the publisher we initialzed earlier (this will trigger 'streamCreated' on other
     // clients)
     var name = session.connection.data;
-    var role = session.connection.
 
     session.publish(publisher);
     console.log("Token: " + token);
@@ -31,32 +27,21 @@ session.on({
   streamCreated: function(event) {
     // Create a container for a new Subscriber, assign it an id using the streamId, put it inside
     // the element with id="subscribers"
-  //   var subContainer = document.createElement('div');
-  //   var options = {fitMode: 'contain', width: '100%', height: '100%'};
+    var subContainer = document.createElement('div');
+    var options = {fitMode: 'contain', width: '100%', height: '100%'};
 
-  //   subContainer.id = 'stream-' + event.stream.streamId;
-  //   subContainer.className = "subscriber";
+    subContainer.id = 'stream-' + event.stream.streamId;
+    subContainer.className = "subscriber";
 
-  //   document.getElementById('subscribers').appendChild(subContainer);
+    document.getElementById('subscribers').appendChild(subContainer);
 
-  //   //keeps track of number of streams.
-  //   videoStreams++;
-
-  //   if(event.stream.videoType === "screen"){
-  //     screenShared = true;
-  //   }
-
-  //   // Subscribe to the stream that caused this event, put it inside the container we just made
-  //   session.subscribe(event.stream, subContainer, options);
+    // Subscribe to the stream that caused this event, put it inside the container we just made
+    session.subscribe(event.stream, subContainer, options);
       console.log("streamCreated");
     },
 
   streamDestroyed: function(event) {
-    // videoStreams--;
 
-    // if(event.stream.videoType === "screen"){
-    //   screenShared = false;
-    // }
     console.log("streamDestroyed");
   }
 
