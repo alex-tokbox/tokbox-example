@@ -158,8 +158,6 @@ function archiveFormat(sessionId){
 app.get('/lecture/:lecturename/:role', function(req, res) {
   var lectureName = req.param('lecturename');
   var role = req.param('role');
-  console.log('lecture name: ' + lectureName);
-  console.log('role:' + role);
 
   if (role === "teacher"){
     console.log("role = teacher");
@@ -170,14 +168,15 @@ app.get('/lecture/:lecturename/:role', function(req, res) {
 
   } else if (role === "lurker") {
     console.log("role = lurker");
+    lurkerJoins(lectureName, req, res);
 
   } else {
-    console.log("role error");
+    console.log("invalid role");
   }
 });
 
 
-
+//When a teacher creates a lecture, give them a moderator token and load the teacher view
 function teacherJoins(lectureName, req, res){
    //Teacher (first person to join lecture)
   if (!app.get(lectureName)){
@@ -203,6 +202,8 @@ function teacherJoins(lectureName, req, res){
   }
 }
 
+
+//When a student joins a lecture, give them a publisher token and load the student view
 function studentJoins(lectureName, req, res) {
   
   if (!app.get(lectureName)){
@@ -210,7 +211,10 @@ function studentJoins(lectureName, req, res) {
   } else {
     var session = app.get(lectureName);
     // generate a publisher token
-    var token = opentok.generateToken(session);
+    var tokenOptions = {};
+      tokenOptions.role = 'publisher';
+      tokenOptions.data = "role=student";
+    var token = opentok.generateToken(session, tokenOptions);
 
     res.render('lecture-student.ejs', {
       apiKey: apiKey,
@@ -220,6 +224,17 @@ function studentJoins(lectureName, req, res) {
   }
 }
 
+//Need to implement
+//When a lurker joins a lecture, give them a subscriber token
+function lurkerJoins(lectureName, req, res){
+  console.log('I\'m a lurker!');
+  var session = app.get(lectureName);
+  // generate a publisher token
+  var tokenOptions = {};
+    tokenOptions.role = 'subscriber';
+    tokenOptions.data = "role=lurker";
+  var token = opentok.generateToken(session, tokenOptions);
+}
 
 // Start the express app
 function init() {
