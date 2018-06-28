@@ -155,19 +155,19 @@ function archiveFormat(sessionId){
 /*----------------- Lecture -------------------*/
 
 
-app.get('/lecture/:lecturename/:role', function(req, res) {
+app.get('/lecture/:lecturename/:role/:name', function(req, res) {
   var lectureName = req.param('lecturename');
   var role = req.param('role');
+  var name = req.param('name');
+  console.log("name:" + name);
 
   if (role === "teacher"){
-    console.log("role = teacher");
-    teacherJoins(lectureName, req, res);
+    teacherJoins(lectureName, name, req, res);
+
   } else if (role === "student") {
-    console.log("role = student");
-    studentJoins(lectureName, req, res);
+    studentJoins(lectureName, name, req, res);
 
   } else if (role === "lurker") {
-    console.log("role = lurker");
     lurkerJoins(lectureName, req, res);
 
   } else {
@@ -177,7 +177,7 @@ app.get('/lecture/:lecturename/:role', function(req, res) {
 
 
 //When a teacher creates a lecture, give them a moderator token and load the teacher view
-function teacherJoins(lectureName, req, res){
+function teacherJoins(lectureName, name, req, res){
    //Teacher (first person to join lecture)
   if (!app.get(lectureName)){
     // Create a session and store it in the express app
@@ -204,7 +204,7 @@ function teacherJoins(lectureName, req, res){
 
 
 //When a student joins a lecture, give them a publisher token and load the student view
-function studentJoins(lectureName, req, res) {
+function studentJoins(lectureName, name, req, res) {
   
   if (!app.get(lectureName)){
     console.log("Sorry, lecture does not exist");
@@ -227,13 +227,24 @@ function studentJoins(lectureName, req, res) {
 //Need to implement
 //When a lurker joins a lecture, give them a subscriber token
 function lurkerJoins(lectureName, req, res){
-  console.log('I\'m a lurker!');
-  var session = app.get(lectureName);
-  // generate a publisher token
-  var tokenOptions = {};
-    tokenOptions.role = 'subscriber';
-    tokenOptions.data = "role=lurker";
-  var token = opentok.generateToken(session, tokenOptions);
+  
+  if (!app.get(lectureName)){
+    console.log("Sorry, lecture does not exist");
+  } else {
+    console.log('I\'m a lurker!');
+    var session = app.get(lectureName);
+    // generate a publisher token
+    var tokenOptions = {};
+      tokenOptions.role = 'subscriber';
+      tokenOptions.data = "role=lurker";
+    var token = opentok.generateToken(session, tokenOptions);
+
+    res.render('lecture-lurker.ejs', {
+      apiKey: apiKey,
+      sessionId: session,
+      token: token
+    });
+  }
 }
 
 // Start the express app
