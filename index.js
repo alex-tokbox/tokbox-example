@@ -188,7 +188,8 @@ function teacherJoins(lectureName, name, req, res){
 
       var tokenOptions = {};
       tokenOptions.role = "moderator";
-      tokenOptions.data = "role=teacher";
+      tokenOptions.data = "role=teacher,name=" + name;
+      console.log(tokenOptions.data);
       var token = opentok.generateToken(session.sessionId, tokenOptions);
 
       res.render('lecture-teacher.ejs', {
@@ -213,7 +214,7 @@ function studentJoins(lectureName, name, req, res) {
     // generate a publisher token
     var tokenOptions = {};
       tokenOptions.role = 'publisher';
-      tokenOptions.data = "role=student";
+      tokenOptions.data = "role=student,name=" + name;
     var token = opentok.generateToken(session, tokenOptions);
 
     res.render('lecture-student.ejs', {
