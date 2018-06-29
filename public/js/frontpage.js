@@ -34,5 +34,5 @@ lectureJoin.addEventListener('submit', function submit(event) {
 //When someone trys to observe a lecture
 lectureObserve.addEventListener('submit', function submit(event) {
   event.preventDefault();
-  window.location.replace(window.location.href + "lecture/" + lectureNameObserve.value + "/lurker");
+  window.location.replace(window.location.href + "lecture/" + lectureNameObserve.value + "/lurker/none");
 });

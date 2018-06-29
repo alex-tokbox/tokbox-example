@@ -55,10 +55,12 @@ function getToken(groupName, res, layout) {
   //Changes the default layoutclass to customize the archive format
   if(layout === "pip"){
     var token = opentok.generateToken(sessionId, {
-      initialLayoutClassList: ['full']
+      initialLayoutClassList: ['left']
     });
   } else {
-    var token = opentok.generateToken(sessionId);
+    var token = opentok.generateToken(sessionId, {
+      initialLayoutClassList: ['right']
+    });
   }
   
   res.render('studygroup.ejs', {
@@ -140,7 +142,8 @@ function archiveFormat(sessionId){
     json: {
         "sessionId": sessionId,
         "layout": {
-          "type": "pip"
+          "type": "custom",
+          "stylesheet": "stream.left {position: absolute; width: 100%; height: 100%; z-index: 100;} stream.right {position: absolute; left: 0; bottom: 0; width: 25%; height: 25%; z-index: 200;}"
         },
         "name" : "Archive",
         "outputMode" : "composed",

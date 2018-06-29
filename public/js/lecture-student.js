@@ -27,7 +27,11 @@ session.on({
 
     if(event.stream.connection.data.includes("role=teacher")) {
       console.log("teacher");
-      var options = {fitMode: 'contain', width: '100%', height: '100%'};
+      var data = event.stream.connection.data;
+      //finds where the name= portion of the data starts and returns the substring after it.
+      var name = data.substring(data.indexOf("name=") + 5);
+
+      var options = {fitMode: 'contain', width: '100%', height: '100%', name: name + ' (Teacher)'};
       var teacher = document.getElementById('teacher');
       session.subscribe(event.stream, teacher, options);
 
@@ -36,13 +40,14 @@ session.on({
           // Create a container for a new Subscriber, assign it an id using the streamId, put it inside
       // the element with id="subscribers"
       var subContainer = document.createElement('div');
-      var options = {subscribeToAudio: true, subscribeToVideo: false, insertDefaultUI: false};
+      var options = {fitmode: 'contain', width: '100%', height: '100%', subscribeToAudio: true, subscribeToVideo: false};
 
       subContainer.id = 'stream-' + event.stream.streamId;
       subContainer.className = "subscriber";
 
       document.getElementById('subscribers').appendChild(subContainer);
-      session.subscribe(event.stream, options);
+      document.getElementById('subscribers').className = "students";
+      session.subscribe(event.stream, subContainer, options);
 
     } else {
 

@@ -3,21 +3,6 @@ body, html {
     height: 100%;
 }
 
-#textchat {
-    height: 100%;
-    background-color: #333;
-    position: fixed;
-    float: right;
-    right:0;
-}
-
-#videos {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 100%;
-}
-
 #publisher {
     position: fixed;
     left: 0;
@@ -27,40 +12,23 @@ body, html {
     height: 198px !important;
 }
 
-#history {
-     width: 100%;
-     height: calc(100% - 40px);
-     overflow: auto;
+#container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
 }
 
-input#msgTxt {
-            height: 40px;
-            position: relative;
-            bottom: 20px;
-            width: 100%;
-}
-#history .mine {
-    color: #00FF00;
-    text-align: right;
-    margin-right: 10px;
-}
-#history .theirs {
-    color: #00FFFF;
-    margin-left: 10px;
+.students {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
-#menu {
-    position: fixed;
-    bottom: 0;
+#teacher {
+    flex: 5;
+}
+
+.subscriber {
     width: 100%;
-}
-
-#page {
-    text-align: center;
-    height: 100%;
-}
-
-.main {
-    padding: 0;
-    height: 100%;
+    height: 20% !important;
 }
