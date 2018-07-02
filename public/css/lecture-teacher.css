@@ -26,22 +26,6 @@ body, html {
     height: 198px !important;
 }
 
-input#msgTxt {
-            height: 40px;
-            position: relative;
-            bottom: 20px;
-            width: 100%;
-}
-#history .mine {
-    color: #00FF00;
-    text-align: right;
-    margin-right: 10px;
-}
-#history .theirs {
-    color: #00FFFF;
-    margin-left: 10px;
-}
-
 #menu {
     position: fixed;
     bottom: 0;
@@ -64,12 +48,15 @@ input#msgTxt {
     border-color: green;
 }
 
-.studentBtn {
+.buttons {
     position: absolute;
     bottom: 0px;
+    width: 100%;
 }
 
 .wrapper {
+    position: relative;
+    height: 100%;
     width: 100%;
     text-align: center;
 }

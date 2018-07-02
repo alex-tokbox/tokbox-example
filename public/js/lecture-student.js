@@ -64,8 +64,11 @@ session.on({
   streamDestroyed: function(event) {
 
     console.log("streamDestroyed");
-  }
+  },
 
+  connectionDestroyed: function(event) {
+    console.log("connectionDestroyed");
+  }
 
 });
 
