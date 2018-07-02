@@ -25,11 +25,13 @@ session.on({
   // This function runs when another client publishes a stream (eg. session.publish())
   streamCreated: function(event) {
 
-    if(event.stream.connection.data.includes("role=teacher")) {
-      console.log("teacher");
       var data = event.stream.connection.data;
       //finds where the name= portion of the data starts and returns the substring after it.
       var name = data.substring(data.indexOf("name=") + 5);
+
+    if(event.stream.connection.data.includes("role=teacher")) {
+      console.log("teacher");
+
 
       var options = {fitMode: 'contain', width: '100%', height: '100%', name: name + ' (Teacher)'};
       var teacher = document.getElementById('teacher');
@@ -40,7 +42,7 @@ session.on({
           // Create a container for a new Subscriber, assign it an id using the streamId, put it inside
       // the element with id="subscribers"
       var subContainer = document.createElement('div');
-      var options = {fitmode: 'contain', width: '100%', height: '100%', subscribeToAudio: true, subscribeToVideo: false};
+      var options = {fitmode: 'contain', width: '100%', height: '100%', subscribeToAudio: true, subscribeToVideo: false, name: name};
 
       subContainer.id = 'stream-' + event.stream.streamId;
       subContainer.className = "subscriber";
