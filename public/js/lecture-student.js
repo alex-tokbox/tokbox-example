@@ -76,6 +76,8 @@ session.on({
 session.on('signal:handraise', function signalCallback(event) {
   $("#lower-hand").hide();
   $("#raise-hand").show();
+  $('#publisher').removeClass("hand-raised");
+  console.log("received signal");
 });
 
 

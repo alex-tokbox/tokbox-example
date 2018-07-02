@@ -28,6 +28,13 @@ session.on({
     // Create a container for a new Subscriber, assign it an id using the streamId, put it inside
     // the element with id="subscribers"
     var subContainer = document.createElement('div');
+    var wrapper = document.createElement('div');
+    wrapper.classList.add('wrapper');
+    
+    //Adds button to lower hand
+    var lowerHandBtn = createHDButton(event);
+    subContainer.appendChild(lowerHandBtn);
+
     var data = event.stream.connection.data;
     //finds where the name= portion of the data starts and returns the substring after it.
     var name = data.substring(data.indexOf("name=") + 5);
@@ -38,10 +45,14 @@ session.on({
     subContainer.id = event.stream.connection.id;
     subContainer.className = "subscriber";
 
-    document.getElementById('subscribers').appendChild(subContainer);
+    wrapper.appendChild(subContainer);
+    wrapper.appendChild(lowerHandBtn);
+    document.getElementById('subscribers').appendChild(wrapper);
 
     // Subscribe to the stream that caused this event, put it inside the container we just made
     session.subscribe(event.stream, subContainer, options);
+
+  
       console.log("streamCreated");
     },
 
@@ -52,6 +63,29 @@ session.on({
 
 });
 
+function createHDButton(event) {
+  var lowerHandBtn = document.createElement('button');
+    lowerHandBtn.innerHTML = 'Lower Hand';
+    lowerHandBtn.classList.add('studentBtn', 'btn', 'btn-primary');
+    var studentConnection = event.stream.connection;
+    lowerHandBtn.addEventListener('click', function(){
+      console.log("studentHandDown");
+      session.signal({
+        type: 'handraise',
+        to: studentConnection,
+        data: 'down'
+      }, function signalCallback(error) {
+        if(error){
+          console.log("hand down error: " + error.message);
+        } else {
+          console.log("hand down sent");
+        }
+      });
+      var studentId = event.stream.connection.connectionId;
+      $('#' + studentId).removeClass("hand-raised");
+    });
+  return lowerHandBtn;
+}
 
 session.on('signal:handraise', function signalCallback(event) {
   console.log("data = " + event.data);

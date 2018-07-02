@@ -3,30 +3,11 @@ body, html {
     height: 100%;
 }
 
-#textchat {
-    height: 100%;
-    background-color: #333;
-    position: fixed;
-    float: right;
-    right:0;
-}
-
-
 #subscribers {
     height: 100%;
     width: 100%;
     display: flex;
     flex-direction: row;
-}
-
-#subscribers-screenshare {
-    height: 100%;
-    width: 20%;
-    display: flex;
-    flex-direction: column-reverse;
-}
-
-#screen-preview {
 }
 
 #videos {
@@ -43,12 +24,6 @@ body, html {
     z-index: 10;
     width: 264px !important;
     height: 198px !important;
-}
-
-#history {
-     width: 100%;
-     height: calc(100% - 40px);
-     overflow: auto;
 }
 
 input#msgTxt {
@@ -87,4 +62,14 @@ input#msgTxt {
     border-style: solid;
     border-width: 10px;
     border-color: green;
+}
+
+.studentBtn {
+    position: absolute;
+    bottom: 0px;
+}
+
+.wrapper {
+    width: 100%;
+    text-align: center;
 }
