@@ -155,7 +155,9 @@ function archiveFormat(sessionId){
     });
 }
 
+/*---------------------------------------------*/
 /*----------------- Lecture -------------------*/
+/*---------------------------------------------*/
 
 
 app.get('/lecture/:lecturename/:role/:name', function(req, res) {

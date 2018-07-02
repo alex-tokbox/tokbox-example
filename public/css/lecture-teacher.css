@@ -82,3 +82,9 @@ input#msgTxt {
     padding: 0;
     height: 100%;
 }
+
+.hand-raised {
+    border-style: solid;
+    border-width: 10px;
+    border-color: green;
+}

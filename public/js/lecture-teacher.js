@@ -35,7 +35,7 @@ session.on({
 
     var options = {fitMode: 'contain', width: '100%', height: '100%', name: name};
 
-    subContainer.id = 'stream-' + event.stream.streamId;
+    subContainer.id = event.stream.connection.id;
     subContainer.className = "subscriber";
 
     document.getElementById('subscribers').appendChild(subContainer);
@@ -48,6 +48,19 @@ session.on({
   streamDestroyed: function(event) {
 
     console.log("streamDestroyed");
+  }
+
+});
+
+
+session.on('signal:handraise', function signalCallback(event) {
+  console.log("data = " + event.data);
+  var studentId = event.from.id;
+
+  if(event.data === "up") {
+    $('#' + studentId).addClass("hand-raised");
+  } else if (event.data === "down") {
+    $('#' + studentId).removeClass("hand-raised");
   }
 
 });

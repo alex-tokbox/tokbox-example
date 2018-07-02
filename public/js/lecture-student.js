@@ -7,6 +7,8 @@ var session = OT.initSession(apiKey, sessionId);
 // Initialize a Publisher, and place it into the element with id="publisher"
 var publisher = OT.initPublisher('publisher', {fitMode: 'contain', width: '100%', height: '100%'});
 
+var teacherConnection = null;
+
 OT.setLogLevel(OT.DEBUG);
 
 // Attach event handlers
@@ -37,6 +39,8 @@ session.on({
       var teacher = document.getElementById('teacher');
       session.subscribe(event.stream, teacher, options);
 
+      teacherConnection = event.stream.connection;
+
     } else if(event.stream.connection.data.includes("role=student")){
       console.log("student");
           // Create a container for a new Subscriber, assign it an id using the streamId, put it inside
@@ -62,6 +66,65 @@ session.on({
     console.log("streamDestroyed");
   }
 
+
+});
+
+
+/* --------------- Hand Raising --------------- */
+
+//When the teacher tells the student to put their hand down
+session.on('signal:handraise', function signalCallback(event) {
+  $("#lower-hand").hide();
+  $("#raise-hand").show();
+});
+
+
+var raiseHand = document.getElementById('raise-hand');
+var lowerHand = document.getElementById('lower-hand');
+
+
+// Send a signal once the user clicks on the raise hand button
+raiseHand.addEventListener('click', function() {
+  session.signal({
+    type: 'handraise',
+    to: teacherConnection,
+    data: 'up'
+  }, function signalCallback(error) {
+    if(error){
+      console.log("hand up error: " + error.message);
+    } else {
+      console.log("hand up sent");
+    }
+  });
+
+  $("#raise-hand").hide();
+  $("#lower-hand").show();
+  $('#publisher').addClass("hand-raised");
+
+});
+
+// Send a signal once the user clicks on the lower hand button
+lowerHand.addEventListener('click', function() {
+  session.signal({
+    type: 'handraise',
+    to: teacherConnection,
+    data: 'down'
+  }, function signalCallback(error) {
+    if(error){
+      console.log("hand down error: " + error.message);
+    } else {
+      console.log("hand down sent");
+    }
+  });
+
+  $("#lower-hand").hide();
+  $("#raise-hand").show();
+  $('#publisher').removeClass("hand-raised");
+
+});
+
+$(document).ready(function() {
+  $("#lower-hand").hide();
 });
 
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission

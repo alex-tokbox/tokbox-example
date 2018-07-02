@@ -39,3 +39,9 @@ body, html {
     width: 100%;
     text-align: center;
 }
+
+.hand-raised {
+    border-style: solid;
+    border-width: 10px;
+    border-color: green;
+}
