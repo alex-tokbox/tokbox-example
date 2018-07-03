@@ -52,6 +52,8 @@ session.on({
 
     if(event.stream.videoType === "screen"){
       screenShared = false;
+      $("#subscribers-screenshare").attr('id', 'subscribers');
+      $("#publisher-screenshare").attr('id', 'publisher');
     }
   }
 
@@ -65,7 +67,8 @@ session.connect(token);
 var msgHistory = document.querySelector('#history');
 session.on('signal:msg', function signalCallback(event) {
   var msg = document.createElement('p');
-  msg.textContent = event.data;
+  var senderName = event.from.data;
+  msg.textContent = senderName + " : " + event.data;
   msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
   msgHistory.appendChild(msg);
   msg.scrollIntoView();
@@ -114,11 +117,34 @@ $(document).ready(function() {
   $(".stop").click(function(event){
     $.get("/stop/" + archiveID);
   }).hide();
-});
 
 /* --------------- Screen Sharing --------------- */
 
+  $(".shareScreen").show();
+  $(".stopScreen").hide();
+});
+
+var screenPublisher;
+
 var screenShare = document.querySelector(".shareScreen"); 
+var stopShare = document.querySelector(".stopScreen");
+
+stopShare.addEventListener('click', function submit(event) {
+  session.unpublish(screenPublisher);
+  
+  //Modifies page formatting to go back to the standard view
+  $(".shareScreen").show();
+  $(".stopScreen").hide();
+  $("#subscribers-screenshare").attr('id', 'subscribers');
+  $("#publisher-screenshare").attr('id', 'publisher');
+  
+  //Recreates the div that was destroyed
+  var videoDiv = document.getElementById("videos");
+  var newScreenDiv = document.createElement("div");
+  newScreenDiv.id = "screen-preview";
+  videoDiv.appendChild(newScreenDiv);
+
+});
 
 //Extension registration
 OT.registerScreenSharingExtension('chrome', 'ghdnbnpmbdjgggfaljdomeghjkdjnalk', 2.0);
@@ -127,7 +153,10 @@ screenShare.addEventListener('click', function submit(event) {
 
   //Adds custom classes to change layout of page
   $("#subscribers").attr('id', 'subscribers-screenshare');
-  $("#publisher").removeAttr('id');
+  $("#publisher").attr('id', 'publisher-screenshare');
+
+  $(".shareScreen").hide();
+  $(".stopScreen").show();
 
 
   OT.checkScreenSharingCapability(function(response) {
@@ -143,7 +172,7 @@ screenShare.addEventListener('click', function submit(event) {
     } else {
       // Screen sharing is available. Publish the screen.
       console.log("good to go");
-      var screenPublisher = OT.initPublisher('screen-preview',
+      screenPublisher = OT.initPublisher('screen-preview',
         {videoSource: 'screen', fitMode: 'contain', width: '100%', height: '100%'},
         function(error) {
           if (error) {

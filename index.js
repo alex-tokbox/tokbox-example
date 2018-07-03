@@ -31,8 +31,9 @@ app.get('/', function(req, res) {
 
 /* --------------- Study Group --------------- */
 
-app.get('/studygroup/:groupname', function(req, res) {
+app.get('/studygroup/:groupname/:name', function(req, res) {
   var groupName = req.param('groupname');
+  var name = req.param('name');
 
   //If the session under that group name doesn't exist
   if (!app.get(groupName)){
@@ -40,25 +41,27 @@ app.get('/studygroup/:groupname', function(req, res) {
     opentok.createSession({mediaMode:"routed"}, function(err, session) {
       if (err) throw err;
       app.set(groupName, session.sessionId);
-      getToken(groupName, res, "pip");
+      getToken(groupName, res, "pip", name);
     });
     session = groupName;
 
   } else {
-    getToken(groupName, res);
+    getToken(groupName, res, "", name);
   }
 });
 
 // generate a fresh token for this client
-function getToken(groupName, res, layout) {
+function getToken(groupName, res, layout, name) {
   var sessionId = app.get(groupName);
   //Changes the default layoutclass to customize the archive format
   if(layout === "pip"){
     var token = opentok.generateToken(sessionId, {
+      data: name,
       initialLayoutClassList: ['left']
     });
   } else {
     var token = opentok.generateToken(sessionId, {
+      data: name,
       initialLayoutClassList: ['right']
     });
   }

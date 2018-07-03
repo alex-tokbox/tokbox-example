@@ -1,6 +1,6 @@
 var studyGroup = document.getElementById('studygroup');
 var groupName = document.getElementById('groupname');
-var name = document.getElementById('name');
+var studyName = document.getElementById('name-studyname');
 
 var lectureCreate = document.getElementById('lecture-create');
 var lectureNameCreate = document.getElementById('lecturename-teacher');
@@ -16,7 +16,7 @@ var lectureNameObserve = document.getElementById('lecturename-lurker');
 //When someone trys to join a group
 studyGroup.addEventListener('submit', function submit(event) {
   event.preventDefault();
-  window.location.replace(window.location.href + "studygroup/" + groupName.value);
+  window.location.replace(window.location.href + "studygroup/" + groupName.value + "/" + studyName.value);
 });
 
 //When someone trys to create a lecture

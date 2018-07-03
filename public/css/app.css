@@ -64,6 +64,7 @@ input#msgTxt {
 }
 #history .theirs {
     color: #00FFFF;
+    text-align: left;
     margin-left: 10px;
 }
 
