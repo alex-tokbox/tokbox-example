@@ -62,12 +62,16 @@ session.on({
   },
 
   streamDestroyed: function(event) {
-
     console.log("streamDestroyed");
   },
 
   connectionDestroyed: function(event) {
     console.log("connectionDestroyed");
+    var students = document.getElementById("subscribers");
+    console.log("child nodes" + students.hasChildNodes());
+    if (students.hasChildNodes() == false){
+      $('#subscribers').removeClass('students');
+    }
   }
 
 });

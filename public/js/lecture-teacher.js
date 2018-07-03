@@ -55,6 +55,7 @@ session.on({
     subContainer.id = event.stream.connection.id;
     subContainer.className = "subscriber";
 
+    wrapper.id = "wrapper:" + event.stream.connection.id;
     wrapper.appendChild(subContainer);
     wrapper.appendChild(buttons);
     document.getElementById('subscribers').appendChild(wrapper);
@@ -67,12 +68,23 @@ session.on({
     },
 
   streamDestroyed: function(event) {
-
     console.log("streamDestroyed");
+
+    var connectionId = event.stream.connection.connectionId;
+    var data = event.stream.connection.data;
+    var name = data.substring(data.indexOf("name=") + 5);
+
+    document.getElementById("wrapper:" + connectionId).innerHTML = name;
+
   },
 
   connectionDestroyed: function(event) {
-    console.log("connectionDestroyed");
+    
+    var connectionId = event.connection.connectionId;
+
+    console.log("connectionDestroyed: " + connectionId);
+    //removes wrapper containing stream
+    document.getElementById("wrapper:" + connectionId).remove();
   }
 
 });
