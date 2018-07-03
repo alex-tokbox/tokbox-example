@@ -41,6 +41,14 @@ session.on({
 
     if(event.stream.videoType === "screen"){
       screenShared = true;
+      console.log("screen shared");
+      //Adds custom classes to change layout of page
+      $("#subscribers").attr('id', 'subscribers-screenshare');
+      $("#publisher").attr('id', 'publisher-screenshare');
+      subContainer = document.getElementById('screen-preview');
+
+      //prevents other participants from also sharing screen
+      $(".shareScreen").hide();
     }
 
     // Subscribe to the stream that caused this event, put it inside the container we just made
@@ -49,12 +57,26 @@ session.on({
 
   streamDestroyed: function(event) {
     videoStreams--;
-
+    console.log("stream destroyed");
     if(event.stream.videoType === "screen"){
       screenShared = false;
       $("#subscribers-screenshare").attr('id', 'subscribers');
       $("#publisher-screenshare").attr('id', 'publisher');
+      console.log("screen unshared");
+
+      //Recreates the div that was destroyed
+      var videoDiv = document.getElementById("videos");
+      var newScreenDiv = document.createElement("div");
+      newScreenDiv.id = "screen-preview";
+      videoDiv.appendChild(newScreenDiv);
+
+      //allows other participants to share screen
+      $(".shareScreen").show();
     }
+  },
+
+  connectionCreated: function(event) {
+    console.log("Created");
   }
 
 });
