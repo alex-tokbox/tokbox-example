@@ -87,3 +87,11 @@ input#msgTxt {
 .row {
     height: 100%;
 }
+
+#study {
+    text-align: center;
+}
+
+#lecture {
+    text-align: center;
+}

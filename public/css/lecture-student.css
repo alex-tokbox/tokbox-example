@@ -45,3 +45,9 @@ body, html {
     border-width: 10px;
     border-color: green;
 }
+
+#speaker {
+    position: fixed;
+    top: 0;
+    right: 0;
+}
