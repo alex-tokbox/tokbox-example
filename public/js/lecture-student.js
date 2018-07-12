@@ -136,5 +136,33 @@ $(document).ready(function() {
   $("#lower-hand").hide();
 });
 
+/* --------------- Mute audio --------------- */
+
+
+
+
+
+
+
+/* ---------- Viewing page check ------------ */
+
+document.addEventListener("visibilitychange", function(){
+  
+  var notViewing = document.hidden.toString();
+  console.log("hidden: " + notViewing);
+
+  session.signal({
+    type: 'viewstate',
+    to: teacherConnection,
+    data: notViewing
+  }, function signalCallback(error) {
+    if(error){
+      console.log("isViewing error: " + error.message);
+    } else {
+      console.log("viewstate sent");
+    }
+  });
+});
+
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission
 session.connect(token);

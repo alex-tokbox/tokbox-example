@@ -60,3 +60,27 @@ body, html {
     width: 100%;
     text-align: center;
 }
+
+/*.not-viewing {
+    position: absolute;
+    top: 40px;
+}
+
+.viewing {
+    visibility: hidden;
+    position: absolute;
+    top: 40px;
+}*/
+
+.invisible {
+    visibility: hidden;
+}
+
+.view-text{
+    position: absolute;
+    top: 45%;
+    width: 100%;
+    color: red;
+    font-size: 40px;
+    text-align: center;
+}

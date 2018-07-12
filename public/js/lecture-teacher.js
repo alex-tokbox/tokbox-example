@@ -29,6 +29,7 @@ session.on({
     // the element with id="subscribers"
     var subContainer = document.createElement('div');
     var wrapper = document.createElement('div');
+    wrapper.id = "wrapper:" + event.stream.connection.id;
     wrapper.classList.add('wrapper');
     var buttons = document.createElement('div');
     buttons.classList.add('buttons');
@@ -45,6 +46,10 @@ session.on({
     var forceDisconnect = createFDButton(event);
     buttons.appendChild(forceDisconnect);
 
+    //Adds not viewing text (Not a button)
+    var notViewing = createNotViewingText(event);
+    //buttons.appendChild(notViewing);
+
     var data = event.stream.connection.data;
     //finds where the name= portion of the data starts and returns the substring after it.
     var name = data.substring(data.indexOf("name=") + 5);
@@ -55,9 +60,10 @@ session.on({
     subContainer.id = event.stream.connection.id;
     subContainer.className = "subscriber";
 
-    wrapper.id = "wrapper:" + event.stream.connection.id;
+    
     wrapper.appendChild(subContainer);
     wrapper.appendChild(buttons);
+    wrapper.appendChild(notViewing);
     document.getElementById('subscribers').appendChild(wrapper);
 
     // Subscribe to the stream that caused this event, put it inside the container we just made
@@ -137,6 +143,19 @@ function createFDButton(event) {
   return forceDisconnectBtn;
 }
 
+function createNotViewingText(event) {
+  var h3 = document.createElement('H3');
+  var text = document.createTextNode("Not Viewing");
+
+  h3.appendChild(text);
+
+  h3.classList.add('view-text', 'viewing');
+  h3.id = "nvt-" + event.stream.connection.id;
+
+  return h3;
+}
+
+//Receiving a handraise signal
 session.on('signal:handraise', function signalCallback(event) {
   console.log("data = " + event.data);
   var studentId = event.from.id;
@@ -148,6 +167,23 @@ session.on('signal:handraise', function signalCallback(event) {
   }
 
 });
+
+//Receiving a viewing signal
+session.on('signal:viewstate', function signalCallback(event) {
+  console.log("hidden: " + event.data);
+  var isHidden = event.data;
+  var studentId = event.from.id;
+  var h3 = $('#nvt-' + studentId);
+  console.log(h3);
+
+  if(isHidden == "true") {
+    h3.removeClass("invisible");
+  } else {
+    h3.addClass("invisible");
+  }
+
+});
+
 
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission
 session.connect(token);
