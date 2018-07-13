@@ -132,17 +132,23 @@ lowerHand.addEventListener('click', function() {
 
 });
 
-$(document).ready(function() {
-  $("#lower-hand").hide();
-});
-
 /* --------------- Mute audio --------------- */
 
+var muteAudio = document.getElementById('mute');
+var unmuteAudio = document.getElementById('unmute');
 
+muteAudio.addEventListener('click', function() {
 
+  publisher.publishAudio(false);
+  $("#mute").hide();
+  $("#unmute").show();
+})
 
-
-
+unmuteAudio.addEventListener('click', function() {
+  publisher.publishAudio(true);
+  $("#unmute").hide();
+  $("#mute").show();
+})
 
 /* ---------- Viewing page check ------------ */
 
@@ -162,6 +168,12 @@ document.addEventListener("visibilitychange", function(){
       console.log("viewstate sent");
     }
   });
+});
+
+
+$(document).ready(function() {
+  $("#lower-hand").hide();
+  $("#unmute").hide();
 });
 
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission

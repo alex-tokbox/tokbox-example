@@ -149,7 +149,7 @@ function createNotViewingText(event) {
 
   h3.appendChild(text);
 
-  h3.classList.add('view-text', 'viewing');
+  h3.classList.add('view-text', 'invisible');
   h3.id = "nvt-" + event.stream.connection.id;
 
   return h3;

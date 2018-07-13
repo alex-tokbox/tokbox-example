@@ -61,17 +61,6 @@ body, html {
     text-align: center;
 }
 
-/*.not-viewing {
-    position: absolute;
-    top: 40px;
-}
-
-.viewing {
-    visibility: hidden;
-    position: absolute;
-    top: 40px;
-}*/
-
 .invisible {
     visibility: hidden;
 }
