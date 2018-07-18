@@ -51,3 +51,11 @@ body, html {
     top: 0;
     right: 0;
 }
+
+#bitrate {
+    position: fixed;
+    right: 2%;
+    bottom: 0;
+    z-index: 100;
+    color: green;
+}

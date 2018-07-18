@@ -8,6 +8,8 @@ var session = OT.initSession(apiKey, sessionId);
 var publisher = OT.initPublisher('publisher', {fitMode: 'contain', width: '100%', height: '100%'});
 
 var teacherConnection = null;
+var teacherSubscriber = null;
+var totalBytes = 0;
 
 OT.setLogLevel(OT.DEBUG);
 
@@ -37,9 +39,10 @@ session.on({
 
       var options = {fitMode: 'contain', width: '100%', height: '100%', name: name + ' (Teacher)'};
       var teacher = document.getElementById('teacher');
-      session.subscribe(event.stream, teacher, options);
 
+      teacherSubscriber = session.subscribe(event.stream, teacher, options);
       teacherConnection = event.stream.connection;
+
 
     } else if(event.stream.connection.data.includes("role=student")){
       console.log("student");
@@ -174,7 +177,26 @@ document.addEventListener("visibilitychange", function(){
 $(document).ready(function() {
   $("#lower-hand").hide();
   $("#unmute").hide();
+
+  //gets framerate and bitrate from the teacher and updates the UI every second
+  setInterval(function(){
+    teacherSubscriber.getStats(function completionHandler(error, stats) {
+      var frameRate = stats.video.frameRate;
+      var bytesReceived = stats.video.bytesReceived;
+      document.getElementById("bitrate").innerHTML = "(" + frameRate + "fps, " + (bytesReceived - totalBytes)/1000 + "KB/s)";
+      totalBytes = bytesReceived;
+    });
+  }, 1000);
+  //
 });
+
+function updateStats(error) {
+  //console.log(stats.audio.bytesReceived);
+  console.log("1 sec");
+}
+
+
+
 
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission
 session.connect(token);
