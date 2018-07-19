@@ -185,5 +185,31 @@ session.on('signal:viewstate', function signalCallback(event) {
 });
 
 
+//Broadcasting
+function startBroadcast(event) {
+  console.log("Broadcast Started");
+  
+}
+
+function stopBroadcast(event) {
+  console.log("Broadcast Stopped");
+
+}
+
+$(document).ready(function() {
+  $("#start-broadcast").click(function (event) {
+    //$.post("/broadcast/start/" + session.sessionId);
+    console.log("Started " + session.sessionId);
+    $("#start-broadcast").hide();
+    $("#stop-broadcast").show();
+  }).show();
+  $("#stop-broadcast").click(function(event){
+    //$.post("/broadcast/stop");
+    console.log("stopped");
+    $("#start-broadcast").show();
+    $("#stop-broadcast").hide();
+  }).hide();
+});
+
 // Connect to the Session using the 'apiKey' of the application and a 'token' for permission
 session.connect(token);

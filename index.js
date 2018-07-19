@@ -21,6 +21,9 @@ app.use(bodyParser.json());
 // Initialize OpenTok
 var opentok = new OpenTok(apiKey, apiSecret);
 
+// Broadcast Id
+var broadcastId = null;
+
 init();
 
 
@@ -233,7 +236,6 @@ function studentJoins(lectureName, name, req, res) {
   }
 }
 
-//Need to implement
 //When a lurker joins a lecture, give them a subscriber token
 function lurkerJoins(lectureName, req, res){
   
@@ -254,6 +256,93 @@ function lurkerJoins(lectureName, req, res){
       token: token
     });
   }
+}
+
+
+//--------------- Broadcasts ------------------//
+
+app.post('/broadcast/start/:sessionid', function(req, res) {
+  var sessionId = req.param('sessionid');
+  startBroadcast(sessionId);
+});
+
+app.post('/broadcast/stop', function(req, res) {
+  stopBroadcast();
+});
+
+//Broadcast
+function startBroadcast(sessionId){
+
+ 
+  const headers = () => {
+    const createToken = () => {
+      const options = {
+        issuer: apiKey,
+        expiresIn: '1m',
+      };
+      return jwt.sign({ ist: 'project' }, apiSecret, options);
+    };
+
+    return { 
+      'X-OPENTOK-AUTH': createToken(),
+      'Content-Type': 'application/json'
+    };
+  };
+  request.post({
+    headers: headers(),
+    url: 'https://api.opentok.com/v2/project/' + apiKey + '/broadcast',
+    json: {
+        "sessionId": sessionId,
+        "layout": {
+          "type": "bestFit"
+        },
+        "maxDuration": 5400,
+        "outputs": {
+          "hls": {},
+          "rtmp": {
+            "id": "main",
+            "serverUrl": "",
+            "streamName": ""
+          },
+        },
+        "resolution": "640x480"
+      }
+  },function(error, response, body) {
+      if (error) {
+        console.log('error', error);
+      } else {
+        var bodyObject = JSON.parse(body);
+        broadcastId = bodyObject.id;
+        console.log("Success: " + broadcastId);
+      }
+    });
+}
+
+//Stops the broadcast when called - needs the broadcastId
+function stopBroadcast() {
+  const headers = () => {
+    const createToken = () => {
+      const options = {
+        issuer: apiKey,
+        expiresIn: '1m',
+      };
+      return jwt.sign({ ist: 'project' }, apiSecret, options);
+    };
+
+    return { 
+      'X-OPENTOK-AUTH': createToken(),
+      'Content-Type': 'application/json'
+    };
+  };
+  request.post({
+    headers: headers(),
+    url: 'https://api.opentok.com/v2/project/' + apiKey + '/broadcast/' + broadcastId + '/stop',
+    json: {}
+  },function(error, response, body) {
+      if (error) {
+        console.log('error', error);
+      }
+    });
 }
 
 // Start the express app
