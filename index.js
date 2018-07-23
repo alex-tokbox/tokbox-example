@@ -200,7 +200,9 @@ function teacherJoins(lectureName, name, req, res){
       var tokenOptions = {};
       tokenOptions.role = "moderator";
       tokenOptions.data = "role=teacher,name=" + name;
+      tokenOptions.initialLayoutClassList = ['teacher'];
       console.log(tokenOptions.data);
+      console.log("class = " + tokenOptions.initialLayoutClassList);
       var token = opentok.generateToken(session.sessionId, tokenOptions);
 
       res.render('lecture-teacher.ejs', {
@@ -264,6 +266,7 @@ function lurkerJoins(lectureName, req, res){
 app.post('/broadcast/start/:sessionid', function(req, res) {
   var sessionId = req.param('sessionid');
   startBroadcast(sessionId);
+  console.log(broadcastId);
 });
 
 app.post('/broadcast/stop', function(req, res) {
@@ -294,15 +297,16 @@ function startBroadcast(sessionId){
     json: {
         "sessionId": sessionId,
         "layout": {
-          "type": "bestFit"
+          "type": "custom",
+          "stylesheet": "stream.teacher {position: absolute; width: 100%; height: 100%; z-index: 100;}"
         },
-        "maxDuration": 5400,
+        "maxDuration": 300,
         "outputs": {
           "hls": {},
           "rtmp": {
-            "id": "main",
-            "serverUrl": "",
-            "streamName": ""
+            "id": "youtube",
+            "serverUrl": "rtmp://a.rtmp.youtube.com/live2",
+            "streamName": "pzxk-z8g4-r1uf-crzu"
           },
         },
         "resolution": "640x480"
@@ -311,8 +315,9 @@ function startBroadcast(sessionId){
       if (error) {
         console.log('error', error);
       } else {
-        var bodyObject = JSON.parse(body);
-        broadcastId = bodyObject.id;
+        //var bodyObject = JSON.parse(body);
+        //broadcastId = bodyObject.id;
+        broadcastId = body.id;
         console.log("Success: " + broadcastId);
       }
     });
